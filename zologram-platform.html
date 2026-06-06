@@ -1,0 +1,1246 @@
+<!DOCTYPE html>
+<html lang="ht">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zologram — Fòmasyon Biznis</title>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --navy: #050D1F;
+    --navy2: #0A1628;
+    --blue: #1A56DB;
+    --blue-light: #4A9EFF;
+    --blue-glow: rgba(74,158,255,0.15);
+    --gold: #F59E0B;
+    --white: #FFFFFF;
+    --gray: #8B9BB4;
+    --card: #0D1B35;
+    --border: rgba(74,158,255,0.15);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    background: var(--navy);
+    color: var(--white);
+    overflow-x: hidden;
+  }
+
+  h1, h2, h3, h4 { font-family: 'Syne', sans-serif; }
+
+  /* ===== NOISE OVERLAY ===== */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+
+  /* ===== PAGES ===== */
+  .page { display: none; min-height: 100vh; position: relative; z-index: 1; }
+  .page.active { display: block; }
+
+  /* ===== NAV ===== */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    padding: 20px 40px;
+    display: flex; align-items: center; justify-content: space-between;
+    background: rgba(5,13,31,0.85);
+    backdrop-filter: blur(20px);
+    border-bottom: 1px solid var(--border);
+    z-index: 100;
+  }
+
+  .nav-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 22px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--white);
+  }
+
+  .nav-logo span { color: var(--blue-light); }
+
+  .nav-actions { display: flex; gap: 12px; align-items: center; }
+
+  .btn {
+    padding: 10px 22px;
+    border-radius: 8px;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    border: none;
+    transition: all 0.2s;
+  }
+
+  .btn-ghost {
+    background: transparent;
+    color: var(--gray);
+    border: 1px solid var(--border);
+  }
+  .btn-ghost:hover { color: var(--white); border-color: var(--blue-light); }
+
+  .btn-primary {
+    background: var(--blue);
+    color: var(--white);
+    box-shadow: 0 0 20px rgba(26,86,219,0.4);
+  }
+  .btn-primary:hover { background: #1d4ed8; transform: translateY(-1px); box-shadow: 0 0 30px rgba(26,86,219,0.6); }
+
+  .btn-gold {
+    background: var(--gold);
+    color: #000;
+    font-weight: 700;
+    font-size: 16px;
+    padding: 16px 36px;
+    border-radius: 10px;
+    box-shadow: 0 0 30px rgba(245,158,11,0.4);
+  }
+  .btn-gold:hover { transform: translateY(-2px); box-shadow: 0 0 50px rgba(245,158,11,0.6); }
+
+  .btn-full { width: 100%; }
+
+  /* ===== HERO ===== */
+  #landing { padding-top: 80px; }
+
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 60px 20px;
+    position: relative;
+  }
+
+  .hero-glow {
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 600px;
+    height: 600px;
+    background: radial-gradient(circle, rgba(26,86,219,0.2) 0%, transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background: rgba(74,158,255,0.1);
+    border: 1px solid var(--border);
+    border-radius: 50px;
+    padding: 8px 18px;
+    font-size: 13px;
+    color: var(--blue-light);
+    margin-bottom: 32px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .badge-dot {
+    width: 7px; height: 7px;
+    background: var(--blue-light);
+    border-radius: 50%;
+    animation: pulse 2s infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { opacity: 1; }
+    50% { opacity: 0.3; }
+  }
+
+  .hero h1 {
+    font-size: clamp(36px, 7vw, 72px);
+    font-weight: 800;
+    line-height: 1.1;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s 0.1s ease both;
+  }
+
+  .hero h1 .accent { color: var(--blue-light); }
+  .hero h1 .gold { color: var(--gold); }
+
+  .hero-sub {
+    font-size: clamp(16px, 2vw, 20px);
+    color: var(--gray);
+    max-width: 600px;
+    margin: 0 auto 40px;
+    line-height: 1.7;
+    animation: fadeUp 0.6s 0.2s ease both;
+  }
+
+  .hero-cta { animation: fadeUp 0.6s 0.3s ease both; }
+
+  .hero-stats {
+    display: flex;
+    gap: 40px;
+    justify-content: center;
+    margin-top: 60px;
+    flex-wrap: wrap;
+    animation: fadeUp 0.6s 0.4s ease both;
+  }
+
+  .stat { text-align: center; }
+  .stat-num { font-family: 'Syne', sans-serif; font-size: 32px; font-weight: 800; color: var(--white); }
+  .stat-num span { color: var(--blue-light); }
+  .stat-label { font-size: 13px; color: var(--gray); margin-top: 4px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* ===== WHAT YOU GET ===== */
+  .section { padding: 80px 20px; max-width: 1100px; margin: 0 auto; }
+
+  .section-label {
+    text-align: center;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--blue-light);
+    margin-bottom: 16px;
+  }
+
+  .section-title {
+    text-align: center;
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 800;
+    margin-bottom: 60px;
+  }
+
+  .modules-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 20px;
+  }
+
+  .module-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    transition: all 0.3s;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .module-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: linear-gradient(90deg, var(--blue), var(--blue-light));
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+
+  .module-card:hover { border-color: rgba(74,158,255,0.4); transform: translateY(-4px); }
+  .module-card:hover::before { opacity: 1; }
+
+  .module-num {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--blue-light);
+    letter-spacing: 2px;
+    margin-bottom: 12px;
+  }
+
+  .module-title { font-size: 18px; font-weight: 700; margin-bottom: 10px; }
+  .module-desc { font-size: 14px; color: var(--gray); line-height: 1.6; }
+
+  /* ===== PRICING ===== */
+  .pricing-wrapper {
+    max-width: 520px;
+    margin: 0 auto;
+    background: var(--card);
+    border: 1px solid rgba(74,158,255,0.3);
+    border-radius: 24px;
+    padding: 48px;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .pricing-wrapper::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -50%;
+    width: 200%; height: 200%;
+    background: radial-gradient(circle at center, rgba(26,86,219,0.08) 0%, transparent 60%);
+    pointer-events: none;
+  }
+
+  .price-badge {
+    display: inline-block;
+    background: var(--gold);
+    color: #000;
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 5px 14px;
+    border-radius: 50px;
+    margin-bottom: 24px;
+    text-transform: uppercase;
+  }
+
+  .price-amount {
+    font-family: 'Syne', sans-serif;
+    font-size: 64px;
+    font-weight: 800;
+    line-height: 1;
+    margin-bottom: 8px;
+  }
+
+  .price-amount sup { font-size: 24px; vertical-align: top; margin-top: 12px; display: inline-block; }
+  .price-currency { font-size: 14px; color: var(--gray); margin-bottom: 32px; }
+
+  .price-features { text-align: left; margin-bottom: 36px; }
+
+  .price-feature {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 0;
+    border-bottom: 1px solid var(--border);
+    font-size: 15px;
+  }
+
+  .price-feature:last-child { border-bottom: none; }
+
+  .check {
+    width: 22px; height: 22px;
+    background: rgba(74,158,255,0.15);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    flex-shrink: 0;
+    color: var(--blue-light);
+    font-size: 12px;
+  }
+
+  /* ===== TESTIMONIALS ===== */
+  .testimonials-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px;
+  }
+
+  .testimonial {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+  }
+
+  .stars { color: var(--gold); font-size: 16px; margin-bottom: 16px; }
+  .testimonial-text { font-size: 15px; line-height: 1.7; color: #CBD5E1; margin-bottom: 20px; }
+  .testimonial-author { display: flex; align-items: center; gap: 12px; }
+
+  .author-avatar {
+    width: 42px; height: 42px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--blue), var(--blue-light));
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+  }
+
+  .author-name { font-weight: 600; font-size: 14px; }
+  .author-role { font-size: 12px; color: var(--gray); }
+
+  /* ===== AUTH MODAL ===== */
+  .modal-overlay {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(5,13,31,0.95);
+    backdrop-filter: blur(10px);
+    z-index: 200;
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+  }
+
+  .modal-overlay.active { display: flex; }
+
+  .modal {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 24px;
+    padding: 48px;
+    width: 100%;
+    max-width: 440px;
+    position: relative;
+    animation: scaleIn 0.3s ease;
+  }
+
+  @keyframes scaleIn {
+    from { opacity: 0; transform: scale(0.95); }
+    to { opacity: 1; transform: scale(1); }
+  }
+
+  .modal-close {
+    position: absolute;
+    top: 20px; right: 20px;
+    background: none;
+    border: none;
+    color: var(--gray);
+    font-size: 20px;
+    cursor: pointer;
+    width: 32px; height: 32px;
+    display: flex; align-items: center; justify-content: center;
+    border-radius: 50%;
+    transition: all 0.2s;
+  }
+  .modal-close:hover { background: var(--border); color: var(--white); }
+
+  .modal-title { font-size: 24px; font-weight: 800; margin-bottom: 8px; }
+  .modal-sub { font-size: 14px; color: var(--gray); margin-bottom: 32px; }
+
+  .tabs {
+    display: flex;
+    background: rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 4px;
+    margin-bottom: 28px;
+  }
+
+  .tab {
+    flex: 1;
+    padding: 10px;
+    text-align: center;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    color: var(--gray);
+    transition: all 0.2s;
+    border: none;
+    background: none;
+  }
+
+  .tab.active { background: var(--blue); color: var(--white); }
+
+  .form-group { margin-bottom: 18px; }
+
+  .form-label {
+    display: block;
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--gray);
+    margin-bottom: 8px;
+  }
+
+  .form-input {
+    width: 100%;
+    padding: 13px 16px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    color: var(--white);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    outline: none;
+    transition: border-color 0.2s;
+  }
+
+  .form-input:focus { border-color: var(--blue-light); }
+  .form-input::placeholder { color: rgba(139,155,180,0.5); }
+
+  .form-tab { display: none; }
+  .form-tab.active { display: block; }
+
+  .divider {
+    text-align: center;
+    font-size: 12px;
+    color: var(--gray);
+    margin: 20px 0;
+    position: relative;
+  }
+
+  .divider::before, .divider::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    width: 42%;
+    height: 1px;
+    background: var(--border);
+  }
+  .divider::before { left: 0; }
+  .divider::after { right: 0; }
+
+  /* ===== PAYMENT MODAL ===== */
+  .payment-steps { display: flex; flex-direction: column; gap: 16px; margin-bottom: 28px; }
+
+  .payment-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 16px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+  }
+
+  .step-num {
+    width: 32px; height: 32px;
+    background: var(--blue);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    flex-shrink: 0;
+  }
+
+  .step-text { font-size: 14px; color: var(--gray); }
+  .step-text strong { color: var(--white); display: block; font-size: 15px; margin-bottom: 2px; }
+
+  .moncash-logo {
+    background: #E30613;
+    color: white;
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 13px;
+    padding: 6px 14px;
+    border-radius: 6px;
+    margin-left: auto;
+  }
+
+  /* ===== MEMBER AREA ===== */
+  #member { padding-top: 80px; }
+
+  .member-header {
+    background: var(--card);
+    border-bottom: 1px solid var(--border);
+    padding: 40px;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .member-welcome { font-size: 13px; color: var(--blue-light); margin-bottom: 8px; }
+  .member-title { font-size: 32px; font-weight: 800; }
+
+  .member-content { max-width: 1100px; margin: 40px auto; padding: 0 20px; }
+
+  .progress-card {
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 16px;
+    padding: 28px;
+    margin-bottom: 32px;
+  }
+
+  .progress-bar-wrap {
+    background: rgba(255,255,255,0.06);
+    border-radius: 50px;
+    height: 8px;
+    margin: 16px 0 8px;
+    overflow: hidden;
+  }
+
+  .progress-bar {
+    height: 100%;
+    background: linear-gradient(90deg, var(--blue), var(--blue-light));
+    border-radius: 50px;
+    width: 15%;
+    transition: width 1s ease;
+  }
+
+  .course-modules { display: flex; flex-direction: column; gap: 12px; }
+
+  .course-module {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: 20px 24px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 14px;
+    cursor: pointer;
+    transition: all 0.2s;
+  }
+
+  .course-module:hover { border-color: rgba(74,158,255,0.4); transform: translateX(4px); }
+  .course-module.locked { opacity: 0.5; cursor: not-allowed; }
+  .course-module.locked:hover { transform: none; }
+
+  .module-icon {
+    width: 44px; height: 44px;
+    border-radius: 12px;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 20px;
+    flex-shrink: 0;
+  }
+
+  .icon-unlocked { background: rgba(74,158,255,0.15); }
+  .icon-locked { background: rgba(255,255,255,0.05); }
+
+  .module-info { flex: 1; }
+  .module-info-title { font-weight: 600; font-size: 15px; margin-bottom: 4px; }
+  .module-info-meta { font-size: 13px; color: var(--gray); }
+
+  .module-status {
+    font-size: 12px;
+    font-weight: 600;
+    padding: 5px 12px;
+    border-radius: 50px;
+  }
+
+  .status-new { background: rgba(74,158,255,0.15); color: var(--blue-light); }
+  .status-locked { background: rgba(255,255,255,0.05); color: var(--gray); }
+  .status-done { background: rgba(16,185,129,0.15); color: #10B981; }
+
+  /* ===== SUCCESS ===== */
+  .success-screen {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    padding: 40px 20px;
+  }
+
+  .success-icon {
+    width: 80px; height: 80px;
+    background: rgba(16,185,129,0.15);
+    border: 2px solid #10B981;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 36px;
+    margin: 0 auto 28px;
+    animation: scaleIn 0.5s ease;
+  }
+
+  /* ===== FOOTER ===== */
+  footer {
+    border-top: 1px solid var(--border);
+    padding: 40px;
+    text-align: center;
+    color: var(--gray);
+    font-size: 14px;
+  }
+
+  .footer-logo {
+    font-family: 'Syne', sans-serif;
+    font-size: 20px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 12px;
+  }
+
+  .footer-logo span { color: var(--blue-light); }
+
+  /* ===== NOTIFICATION ===== */
+  .notif {
+    position: fixed;
+    bottom: 30px;
+    right: 30px;
+    background: var(--card);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 16px 20px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-size: 14px;
+    z-index: 300;
+    transform: translateY(100px);
+    opacity: 0;
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+    max-width: 320px;
+  }
+
+  .notif.show { transform: translateY(0); opacity: 1; }
+  .notif-icon { font-size: 20px; }
+
+  /* ===== VIDEO PLAYER ===== */
+  .video-player {
+    background: #000;
+    border-radius: 12px;
+    aspect-ratio: 16/9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 20px;
+    border: 1px solid var(--border);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .video-player::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(135deg, rgba(26,86,219,0.3), rgba(74,158,255,0.1));
+  }
+
+  .play-btn {
+    width: 64px; height: 64px;
+    background: rgba(255,255,255,0.15);
+    border: 2px solid rgba(255,255,255,0.3);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 24px;
+    position: relative;
+    z-index: 1;
+    transition: all 0.2s;
+  }
+
+  .video-player:hover .play-btn { background: var(--blue); border-color: var(--blue); transform: scale(1.1); }
+
+  @media (max-width: 600px) {
+    nav { padding: 16px 20px; }
+    .modal { padding: 32px 24px; }
+    .pricing-wrapper { padding: 32px 24px; }
+    .member-header { padding: 24px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">ZOLO<span>GRAM</span></div>
+  <div class="nav-actions" id="navActions">
+    <button class="btn btn-ghost" onclick="openAuth('login')">Konekte</button>
+    <button class="btn btn-primary" onclick="openAuth('register')">Kòmanse</button>
+  </div>
+</nav>
+
+<!-- ===== LANDING PAGE ===== -->
+<div id="landing" class="page active">
+
+  <!-- HERO -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div>
+      <div class="hero-badge">
+        <div class="badge-dot"></div>
+        Premye platfòm edikasyon biznis pou ayisyen yo
+      </div>
+      <h1>
+        Bati yon <span class="accent">Biznis Solid</span><br>
+        kòmanse <span class="gold">Jodi a</span>
+      </h1>
+      <p class="hero-sub">
+        Aprann estrateji biznis ak antreprenè ki te deja fè wout la. Fòmasyon an pran 90 jou — rezilta yo dire tout lavi ou.
+      </p>
+      <div class="hero-cta">
+        <button class="btn btn-gold" onclick="scrollToPricing()">
+          🚀 Jwenn Aksè Kounye a — 2,500 HTG
+        </button>
+      </div>
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">8<span>+</span></div>
+          <div class="stat-label">Modil Konplè</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">90<span>j</span></div>
+          <div class="stat-label">Pwogram Konplè</div>
+        </div>
+        <div class="stat">
+          <div class="stat-num">✓</div>
+          <div class="stat-label">MonCash / Natcash</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- MODULES -->
+  <div class="section">
+    <div class="section-label">Kontni Fòmasyon an</div>
+    <h2 class="section-title">Sa w ap Aprann</h2>
+    <div class="modules-grid">
+      <div class="module-card">
+        <div class="module-num">MODIL 01</div>
+        <div class="module-title">Fondayon yon Biznis</div>
+        <div class="module-desc">Konprann ki sa ki fè yon biznis mache. Chwazi bon domèn nan, defini kliyan ou yo, bati baz solid la.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">MODIL 02</div>
+        <div class="module-title">Jwenn Premye Kliyan ou</div>
+        <div class="module-desc">Estrateji pou jwenn kliyan san ou pa depanse anpil. Rezo sosyal, bouche-zòrèy, ak outreach dirèk.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">MODIL 03</div>
+        <div class="module-title">Finansman ak Flò Kach</div>
+        <div class="module-desc">Jere lajan biznis ou yon fason pwofesyonèl. Konprann diferans ant revni ak pwofi.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">MODIL 04</div>
+        <div class="module-title">Vann ak Pèswasyon</div>
+        <div class="module-desc">Teknik vant ki fonksyone nan kontèks ayisyen an. Kouman pou konvenk san ou pa parèt dezespere.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">MODIL 05</div>
+        <div class="module-title">Maketing Dijital</div>
+        <div class="module-desc">Itilize TikTok, Instagram ak Facebook pou fè plis vant. Kontni ki atire kliyan otomatikman.</div>
+      </div>
+      <div class="module-card">
+        <div class="module-num">MODIL 06</div>
+        <div class="module-title">Grandi ak Eskal</div>
+        <div class="module-desc">Kouman pou pase de ou pou kòmanse bay lòt moun travay. Sistèm ki travay pou ou menm lè w dòmi.</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- TESTIMONIALS -->
+  <div class="section">
+    <div class="section-label">Temwayaj</div>
+    <h2 class="section-title">Sa Yo Di sou Fòmasyon an</h2>
+    <div class="testimonials-grid">
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Anvan fòmasyon sa a, mwen te gen yon lide men mwen pa t konnen kouman pou kòmanse. Kounye a mwen gen 3 kliyan k ap peye m chak mwa."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">JP</div>
+          <div>
+            <div class="author-name">Jean-Pierre M.</div>
+            <div class="author-role">Antreprenè, Pòtoprens</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Fòmasyon an klè, pratik, epi li adapte ak reyalite ayisyen an. Pa gen pawòl vag — tout bagay konkrè ak aplikab."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">ML</div>
+          <div>
+            <div class="author-name">Marie-Lovely D.</div>
+            <div class="author-role">Kreyatè Kontni, Miami</div>
+          </div>
+        </div>
+      </div>
+      <div class="testimonial">
+        <div class="stars">★★★★★</div>
+        <p class="testimonial-text">"Nan 60 jou apre fòmasyon an, biznis mwen te double. Modil sou maketing dijital la chanje tout bagay pou mwen."</p>
+        <div class="testimonial-author">
+          <div class="author-avatar">RB</div>
+          <div>
+            <div class="author-name">Rachelle B.</div>
+            <div class="author-role">Bizniswomen, Monreyal</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PRICING -->
+  <div class="section" id="pricing">
+    <div class="section-label">Pri</div>
+    <h2 class="section-title">Yon Sèl Envestisman</h2>
+    <div class="pricing-wrapper">
+      <div class="price-badge">⚡ Aksè Konplè</div>
+      <div class="price-amount"><sup>HTG</sup>2,500</div>
+      <div class="price-currency">oswa $20 USD — peman yon sèl fwa</div>
+      <div class="price-features">
+        <div class="price-feature"><div class="check">✓</div> Aksè ak 8 modil konplè</div>
+        <div class="price-feature"><div class="check">✓</div> Videyo + dokiman PDF pou chak modil</div>
+        <div class="price-feature"><div class="check">✓</div> Aksè pou tout lavi ou</div>
+        <div class="price-feature"><div class="check">✓</div> Mises à jour gratis</div>
+        <div class="price-feature"><div class="check">✓</div> Peman via MonCash oswa Natcash</div>
+        <div class="price-feature"><div class="check">✓</div> Garanti satisfaksyon 7 jou</div>
+      </div>
+      <button class="btn btn-gold btn-full" onclick="openPayment()">
+        💳 Achte Kounye a ak MonCash
+      </button>
+      <p style="margin-top:16px; font-size:13px; color:var(--gray);">🔒 Peman sekirize • Aksè imedya apre peman</p>
+    </div>
+  </div>
+
+  <!-- FOOTER -->
+  <footer>
+    <div class="footer-logo">ZOLO<span>GRAM</span></div>
+    <p>© 2025 Zologram Agency — Tout dwa rezève</p>
+    <p style="margin-top:8px;">Fèt ak ❤️ pou ayisyen yo toupatou</p>
+  </footer>
+</div>
+
+<!-- ===== MEMBER AREA ===== -->
+<div id="member" class="page">
+  <div class="member-header">
+    <div class="member-welcome">👋 Byenveni tounen,</div>
+    <div class="member-title" id="memberName">Elèv Zologram</div>
+  </div>
+  <div class="member-content">
+
+    <!-- Progress -->
+    <div class="progress-card">
+      <div style="display:flex; justify-content:space-between; align-items:center;">
+        <div>
+          <div style="font-size:13px; color:var(--gray); margin-bottom:4px;">Pwogrè ou</div>
+          <div style="font-size:20px; font-weight:700;">1 / 8 Modil Konplete</div>
+        </div>
+        <div style="font-size:32px; font-weight:800; color:var(--blue-light);">15%</div>
+      </div>
+      <div class="progress-bar-wrap"><div class="progress-bar"></div></div>
+      <div style="font-size:13px; color:var(--gray);">Kontinye — ou fè yon bon kòmansman !</div>
+    </div>
+
+    <!-- Current Module -->
+    <h3 style="font-size:18px; margin-bottom:16px; font-family:'Syne',sans-serif;">Modil Kounye a</h3>
+    <div style="background:var(--card); border:1px solid var(--border); border-radius:16px; padding:28px; margin-bottom:32px;">
+      <div class="video-player" onclick="showNotif('🎬 Videyo ap chaje...', 'Nan yon vrè app, videyo a ta ap jwe la a !')">
+        <div class="play-btn">▶</div>
+      </div>
+      <div style="font-size:12px; color:var(--blue-light); letter-spacing:2px; margin-bottom:8px;">MODIL 01</div>
+      <h3 style="font-size:22px; margin-bottom:12px;">Fondayon yon Biznis</h3>
+      <p style="color:var(--gray); line-height:1.7; font-size:15px;">Nan modil sa a, ou ap aprann ki sa ki fè yon biznis mache vrèman. Nou pral wè ki jan pou chwazi bon domèn nan, defini kliyan ideyèl ou yo, epi bati yon baz solid anvan ou kòmanse vann.</p>
+    </div>
+
+    <!-- All Modules -->
+    <h3 style="font-size:18px; margin-bottom:16px; font-family:'Syne',sans-serif;">Tout Modil yo</h3>
+    <div class="course-modules">
+      <div class="course-module" onclick="showNotif('▶️ Modil 01', 'Ou ap gade: Fondayon yon Biznis')">
+        <div class="module-icon icon-unlocked">🏗️</div>
+        <div class="module-info">
+          <div class="module-info-title">Fondayon yon Biznis</div>
+          <div class="module-info-meta">45 min • 3 videyo</div>
+        </div>
+        <div class="module-status status-new">An Kou</div>
+      </div>
+      <div class="course-module" onclick="showNotif('▶️ Modil 02', 'Ou ap gade: Jwenn Premye Kliyan ou')">
+        <div class="module-icon icon-unlocked">🎯</div>
+        <div class="module-info">
+          <div class="module-info-title">Jwenn Premye Kliyan ou</div>
+          <div class="module-info-meta">60 min • 4 videyo</div>
+        </div>
+        <div class="module-status status-new">Disponib</div>
+      </div>
+      <div class="course-module locked">
+        <div class="module-icon icon-locked">💰</div>
+        <div class="module-info">
+          <div class="module-info-title">Finansman ak Flò Kach</div>
+          <div class="module-info-meta">50 min • 3 videyo</div>
+        </div>
+        <div class="module-status status-locked">🔒 Vini</div>
+      </div>
+      <div class="course-module locked">
+        <div class="module-icon icon-locked">🤝</div>
+        <div class="module-info">
+          <div class="module-info-title">Vann ak Pèswasyon</div>
+          <div class="module-info-meta">55 min • 4 videyo</div>
+        </div>
+        <div class="module-status status-locked">🔒 Vini</div>
+      </div>
+      <div class="course-module locked">
+        <div class="module-icon icon-locked">📱</div>
+        <div class="module-info">
+          <div class="module-info-title">Maketing Dijital</div>
+          <div class="module-info-meta">70 min • 5 videyo</div>
+        </div>
+        <div class="module-status status-locked">🔒 Vini</div>
+      </div>
+      <div class="course-module locked">
+        <div class="module-icon icon-locked">🚀</div>
+        <div class="module-info">
+          <div class="module-info-title">Grandi ak Eskal</div>
+          <div class="module-info-meta">65 min • 4 videyo</div>
+        </div>
+        <div class="module-status status-locked">🔒 Vini</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ===== AUTH MODAL ===== -->
+<div class="modal-overlay" id="authModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closeAuth()">✕</button>
+    <div class="modal-title">Kont ou</div>
+    <div class="modal-sub">Konekte oswa kreye yon kont pou jwenn aksè</div>
+    <div class="tabs">
+      <button class="tab active" id="tabLogin" onclick="switchTab('login')">Konekte</button>
+      <button class="tab" id="tabRegister" onclick="switchTab('register')">Kreye Kont</button>
+    </div>
+
+    <!-- LOGIN -->
+    <div class="form-tab active" id="formLogin">
+      <div class="form-group">
+        <label class="form-label">Adrès Imèl</label>
+        <input type="email" class="form-input" placeholder="ou@email.com" id="loginEmail">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Modpas</label>
+        <input type="password" class="form-input" placeholder="••••••••" id="loginPass">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="handleLogin()" style="margin-top:8px;">Konekte →</button>
+      <div class="divider">oswa</div>
+      <button class="btn btn-ghost btn-full" onclick="switchTab('register')">Kreye yon kont gratis</button>
+    </div>
+
+    <!-- REGISTER -->
+    <div class="form-tab" id="formRegister">
+      <div class="form-group">
+        <label class="form-label">Prenon ak Non</label>
+        <input type="text" class="form-input" placeholder="Jean Pierre" id="regName">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Adrès Imèl</label>
+        <input type="email" class="form-input" placeholder="ou@email.com" id="regEmail">
+      </div>
+      <div class="form-group">
+        <label class="form-label">Modpas</label>
+        <input type="password" class="form-input" placeholder="Min. 8 karaktè" id="regPass">
+      </div>
+      <button class="btn btn-primary btn-full" onclick="handleRegister()" style="margin-top:8px;">Kreye Kont →</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== PAYMENT MODAL ===== -->
+<div class="modal-overlay" id="paymentModal">
+  <div class="modal">
+    <button class="modal-close" onclick="closePayment()">✕</button>
+    <div class="modal-title">💳 Peman MonCash</div>
+    <div class="modal-sub">Swiv etap yo pou konplete achè ou a</div>
+
+    <div style="background:rgba(74,158,255,0.08); border:1px solid var(--border); border-radius:12px; padding:16px; margin-bottom:24px; display:flex; justify-content:space-between; align-items:center;">
+      <div>
+        <div style="font-size:13px; color:var(--gray);">Fòmasyon Biznis Konplè</div>
+        <div style="font-size:18px; font-weight:700; margin-top:4px;">HTG 2,500</div>
+      </div>
+      <div style="font-size:32px;">🎓</div>
+    </div>
+
+    <div class="payment-steps">
+      <div class="payment-step">
+        <div class="step-num">1</div>
+        <div class="step-text">
+          <strong>Ouvri MonCash ou</strong>
+          Ale nan aplikasyon MonCash ou sou telefòn ou
+        </div>
+        <div class="moncash-logo">MON<br>Cash</div>
+      </div>
+      <div class="payment-step">
+        <div class="step-num">2</div>
+        <div class="step-text">
+          <strong>Klike sou bouton an anba</strong>
+          Ou pral redirije sou paj peman MonCash ofisyèl la
+        </div>
+      </div>
+      <div class="payment-step">
+        <div class="step-num">3</div>
+        <div class="step-text">
+          <strong>Konfime peman an</strong>
+          Antre PIN MonCash ou — aksè otomatik apre sa
+        </div>
+      </div>
+    </div>
+
+    <button class="btn btn-gold btn-full" onclick="handlePayment()">
+      Peye 2,500 HTG ak MonCash →
+    </button>
+    <p style="margin-top:12px; font-size:12px; color:var(--gray); text-align:center;">
+      🔒 Peman pwoteje pa Digicel MonCash • Aksè imedya
+    </p>
+  </div>
+</div>
+
+<!-- NOTIFICATION -->
+<div class="notif" id="notif">
+  <div class="notif-icon" id="notifIcon">✅</div>
+  <div id="notifText">Mesaj la</div>
+</div>
+
+<script>
+  // ===== STATE =====
+  let currentUser = null;
+  let hasPaid = false;
+
+  // Check demo session
+  const savedUser = sessionStorage.getItem('zoloUser');
+  if (savedUser) {
+    currentUser = JSON.parse(savedUser);
+    hasPaid = sessionStorage.getItem('zoloPaid') === 'true';
+    if (hasPaid) showMemberArea();
+    else updateNav();
+  }
+
+  // ===== NAVIGATION =====
+  function updateNav() {
+    const nav = document.getElementById('navActions');
+    if (currentUser) {
+      nav.innerHTML = `
+        <span style="font-size:14px; color:var(--gray);">👋 ${currentUser.name.split(' ')[0]}</span>
+        <button class="btn btn-primary" onclick="openPayment()">Jwenn Aksè</button>
+        <button class="btn btn-ghost" onclick="logout()">Kite</button>
+      `;
+    }
+  }
+
+  function showMemberArea() {
+    document.getElementById('landing').classList.remove('active');
+    document.getElementById('member').classList.add('active');
+    document.getElementById('memberName').textContent = currentUser?.name || 'Elèv Zologram';
+    const nav = document.getElementById('navActions');
+    nav.innerHTML = `
+      <span style="font-size:14px; color:var(--gray);">👋 ${currentUser?.name?.split(' ')[0] || 'Elèv'}</span>
+      <button class="btn btn-ghost" onclick="logout()">Kite</button>
+    `;
+  }
+
+  function logout() {
+    sessionStorage.clear();
+    currentUser = null;
+    hasPaid = false;
+    document.getElementById('landing').classList.add('active');
+    document.getElementById('member').classList.remove('active');
+    document.getElementById('navActions').innerHTML = `
+      <button class="btn btn-ghost" onclick="openAuth('login')">Konekte</button>
+      <button class="btn btn-primary" onclick="openAuth('register')">Kòmanse</button>
+    `;
+    showNotif('👋', 'Ou dekonekte avèk siksè');
+  }
+
+  // ===== AUTH =====
+  function openAuth(tab) {
+    document.getElementById('authModal').classList.add('active');
+    switchTab(tab);
+  }
+
+  function closeAuth() {
+    document.getElementById('authModal').classList.remove('active');
+  }
+
+  function switchTab(tab) {
+    document.getElementById('tabLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('tabRegister').classList.toggle('active', tab === 'register');
+    document.getElementById('formLogin').classList.toggle('active', tab === 'login');
+    document.getElementById('formRegister').classList.toggle('active', tab === 'register');
+  }
+
+  function handleLogin() {
+    const email = document.getElementById('loginEmail').value;
+    const pass = document.getElementById('loginPass').value;
+    if (!email || !pass) { showNotif('⚠️', 'Ranpli tout chan yo'); return; }
+
+    // Demo: simulate login
+    const saved = sessionStorage.getItem('zoloUser');
+    if (saved) {
+      currentUser = JSON.parse(saved);
+    } else {
+      currentUser = { name: 'Elèv Zologram', email };
+    }
+    sessionStorage.setItem('zoloUser', JSON.stringify(currentUser));
+    closeAuth();
+
+    const paid = sessionStorage.getItem('zoloPaid') === 'true';
+    if (paid) { hasPaid = true; showMemberArea(); }
+    else { updateNav(); showNotif('✅', 'Ou konekte avèk siksè !'); }
+  }
+
+  function handleRegister() {
+    const name = document.getElementById('regName').value;
+    const email = document.getElementById('regEmail').value;
+    const pass = document.getElementById('regPass').value;
+    if (!name || !email || !pass) { showNotif('⚠️', 'Ranpli tout chan yo'); return; }
+    if (pass.length < 8) { showNotif('⚠️', 'Modpas dwe gen 8 karaktè omwen'); return; }
+
+    currentUser = { name, email };
+    sessionStorage.setItem('zoloUser', JSON.stringify(currentUser));
+    closeAuth();
+    updateNav();
+    showNotif('🎉', `Byenveni ${name.split(' ')[0]} ! Kont ou kreye.`);
+  }
+
+  // ===== PAYMENT =====
+  function openPayment() {
+    if (!currentUser) { openAuth('register'); return; }
+    document.getElementById('paymentModal').classList.add('active');
+  }
+
+  function closePayment() {
+    document.getElementById('paymentModal').classList.remove('active');
+  }
+
+  function scrollToPricing() {
+    document.getElementById('pricing').scrollIntoView({ behavior: 'smooth' });
+  }
+
+  function handlePayment() {
+    closePayment();
+    showNotif('⏳', 'Koneksyon ak MonCash...');
+
+    // Simulate MonCash redirect & confirmation
+    setTimeout(() => {
+      showNotif('✅', 'Peman konfime ! Aksè ou aktive.');
+      setTimeout(() => {
+        hasPaid = true;
+        sessionStorage.setItem('zoloPaid', 'true');
+        if (!currentUser) currentUser = { name: 'Elèv Zologram', email: '' };
+        showMemberArea();
+        showNotif('🎓', `Byenveni ${currentUser.name.split(' ')[0]} ! Fòmasyon ou kòmanse.`);
+      }, 1500);
+    }, 2000);
+
+    /*
+    =============================================
+    INTEGRATION MONCASH REELLE (pou backend ou)
+    =============================================
+
+    // ETAP 1: Jwenn access token
+    const tokenRes = await fetch('https://client_id:client_secret@moncashbutton.digicelgroup.com/Api/oauth/token', {
+      method: 'POST',
+      headers: { 'Accept': 'application/json' },
+      body: 'scope=read,write&grant_type=client_credentials'
+    });
+    const { access_token } = await tokenRes.json();
+
+    // ETAP 2: Kreye peman
+    const orderId = 'ZOLO-' + Date.now();
+    const payRes = await fetch('https://moncashbutton.digicelgroup.com/Api/v1/CreatePayment', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ amount: 2500, orderId })
+    });
+    const { payment_token } = await payRes.json();
+
+    // ETAP 3: Redirije kliyan an
+    window.location.href = 'https://moncashbutton.digicelgroup.com/Moncash-middleware/Payment/Redirect?token=' + payment_token.token;
+
+    // ETAP 4: Apre retou, verifye peman
+    const verifyRes = await fetch('https://moncashbutton.digicelgroup.com/Api/v1/RetrieveOrderPayment', {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer ' + access_token,
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ orderId })
+    });
+    const { payment } = await verifyRes.json();
+    if (payment.message === 'successful') {
+      // Bay aksè ak fòmasyon an
+      grantAccess(payment.payer);
+    }
+    =============================================
+    */
+  }
+
+  // ===== NOTIFICATION =====
+  function showNotif(icon, text) {
+    const notif = document.getElementById('notif');
+    document.getElementById('notifIcon').textContent = icon;
+    document.getElementById('notifText').textContent = text;
+    notif.classList.add('show');
+    setTimeout(() => notif.classList.remove('show'), 3500);
+  }
+</script>
+</body>
+</html>
